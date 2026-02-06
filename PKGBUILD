@@ -84,10 +84,14 @@ if [[ ! -v "_archive_format" ]]; then
       _archive_format="git"
     fi
   elif [[ "${_git}" == "false" ]]; then
-    if [[ "${_git_service}" == "github" ]]; then
-      _archive_format="zip"
-    elif [[ "${_git_service}" == "gitlab" ]]; then
+    if [[ "${_source}" == "sourceforge" ]]; then
       _archive_format="tar.gz"
+    else
+      if [[ "${_git_service}" == "github" ]]; then
+        _archive_format="zip"
+      elif [[ "${_git_service}" == "gitlab" ]]; then
+        _archive_format="tar.gz"
+      fi
     fi
   fi
 fi
