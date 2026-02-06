@@ -180,7 +180,7 @@ elif [[ "${_git}" == "false" ]]; then
   _tag="${pkgver}"
   _tag_name="pkgver"
 fi
-_tarname="${pkgname}-${_tag}"
+_tarname="${_pkg}-${_tag}"
 _tarfile="${_tarname}.${_archive_format}"
 if [[ "${_offline}" == "true" ]]; then
   _url="file://${HOME}/${pkgname}"
@@ -260,18 +260,18 @@ validpgpkeys=(
 
 prepare() {
   cd \
-    "${_pkg}-${pkgver}"
+    "${_tarname}"
   # Remove include list
   # https://github.com/pypa/wheel/issues/92
   sed \
     -i \
     '/^include =/,/]/d' \
-    pyproject.toml
+    "pyproject.toml"
 }
 
 build() {
   cd \
-    "${_pkg}-${pkgver}"
+    "${_tarname}"
   "${_py}" \
     -m \
       build \
@@ -281,23 +281,33 @@ build() {
 }
 
 check() {
+  local \
+    _lang
+  _lang="en_US.UTF-8"
   cd \
-    "${_pkg}-${pkgver}"
+    "${_tarname}"
   # we need utf locale to valid utf8 tests
   export \
-    LANG=en_US.UTF-8
-  PYTHONPATH="$PWD/build/python/" \
+    LANG="${_lang}"
+  PYTHONPATH="${PWD}/build/python/" \
   "${_py}" \
-    test/alltests.py
+    "test/alltests.py"
 }
 
 package() {
   local \
+    _cmd=() \
     _site_packages
+  _cmd=(
+    "import site;"
+    "print("
+      "site.getsitepackages()["
+        "0])"
+  )
   _site_packages=$(
     "${_py}" \
       -c \
-        "import site; print(site.getsitepackages()[0])")
+        "${_cmd[*]}")
   cd \
     "${_pkg}-${pkgver}"
   "${_py}" \
@@ -311,7 +321,7 @@ package() {
     "${pkgdir}/usr/share/licenses/${pkgname}"
   ln \
     -s \
-    "${_site_packages}/${_pkg}-${pkgver}.dist-info/COPYING.txt" \
+    "${_site_packages}/${_tarname}.dist-info/COPYING.txt" \
     "${pkgdir}/usr/share/licenses/${pkgname}/COPYING.txt"
 }
 
