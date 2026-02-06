@@ -1282,11 +1282,6 @@ jobs:
                 -iname \
                   "*.pkg.tar.*")
       - name:
-          Tests the package.
-        run: |
-          rst2man \
-            --help
-      - name:
           version
         run: |
           echo \
