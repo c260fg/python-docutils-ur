@@ -1284,12 +1284,8 @@ jobs:
       - name:
           Tests the package.
         run: |
-          fur \
-            -v \
-            -h
-          fur \
-            -v \
-            evm-chains
+          rst2man \
+            --help
       - name:
           version
         run: |
