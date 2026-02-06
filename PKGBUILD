@@ -157,7 +157,7 @@ _pygments_optdepends=(
     "for syntax highlighting of code directives and roles."
 )
 optdepends=(
-  "${_mist_parser_optdepends[*]}"
+  "${_myst_parser_optdepends[*]}"
   "${_pillow_optdepends[*]}"
   "${_pygments_optdepends[*]}"
 )
